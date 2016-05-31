@@ -3,6 +3,12 @@
 ### ???
 
 - Feature: Automatically push instance's subnet route into `server.conf`
+- export `zone_id`, `dns_name` from aws_elb
+- Fix the 4 subnet fixed mapping
+- Fill in some examples
+
+### 0.0.5
+- Initial release of `generate-certs` module
 
 ### 0.0.4
 - Standardization with other Unif.io OSS terraform modules
