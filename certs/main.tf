@@ -28,8 +28,8 @@ resource "aws_iam_role" "vpn_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "s3_vpn" {
-  name = "s3_vpn"
+resource "aws_iam_role_policy" "s3_vpn_ro" {
+  name = "s3_vpn_ro"
   role = "${aws_iam_role.vpn_role.id}"
 
   policy = <<EOF
@@ -61,7 +61,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "tags" {
-  name = "tags"
+  name = "vpn-tags"
   role = "${aws_iam_role.vpn_role.id}"
 
   policy = <<EOF
@@ -215,7 +215,7 @@ resource "aws_elb" "elb" {
 
   tags {
     Name        = "${var.stack_item_label}-vpn-elb"
-    application = "${var.stack_item_fullname}-vpn"
+    application = "${var.stack_item_label}-vpn"
     managed_by  = "terraform"
   }
 }
