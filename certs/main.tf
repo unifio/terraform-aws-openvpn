@@ -1,15 +1,13 @@
-# openvpn_server
+# OpenVPN Server
 
+## Configures providers
 provider "aws" {
   region = "${var.region}"
 }
 
-/* ---------------------------- */
-/* IAM Role & Instance Profile  */
-/* ---------------------------- */
-
+## Creates IAM role & policies
 resource "aws_iam_role" "vpn_role" {
-  name = "${var.region}-${var.stack_item_label}-vpn"
+  name = "${var.stack_item_label}-${var.region}"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -42,8 +40,8 @@ resource "aws_iam_role_policy" "s3_vpn_ro" {
         "s3:Get*"
       ],
       "Resource": [
-        "arn:aws:s3:::${var.s3_path}",
-        "arn:aws:s3:::${var.s3_path}/*"
+        "arn:aws:s3:::${var.s3_bucket}/${var.s3_bucket_prefix}",
+        "arn:aws:s3:::${var.s3_bucket}/${var.s3_bucket_prefix}/*"
       ]
     },
     {
@@ -83,77 +81,56 @@ resource "aws_iam_role_policy" "tags" {
 EOF
 }
 
+## Creates IAM instance profile
 resource "aws_iam_instance_profile" "vpn_profile" {
-  name  = "${var.region}-${var.stack_item_label}-vpn"
+  name  = "${var.stack_item_label}-${var.region}"
   roles = ["${aws_iam_role.vpn_role.name}"]
 }
 
-/* ---------------------------- */
-/* Security Group               */
-/* ---------------------------- */
+## Creates security group rules
 resource "aws_security_group_rule" "allow_all_out" {
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-
-  security_group_id = "${module.asg.sg_id}"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${module.cluster.sg_id}"
 }
 
 resource "aws_security_group_rule" "allow_ssh_in_tcp" {
-  type        = "ingress"
-  from_port   = 22
-  to_port     = 22
-  protocol    = "tcp"
-  cidr_blocks = ["${split(",",var.cidr_whitelist)}"]
-
-  security_group_id = "${module.asg.sg_id}"
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["${split(",",var.cidr_whitelist)}"]
+  security_group_id = "${module.cluster.sg_id}"
 }
 
-resource "aws_security_group_rule" "allow_openvpn_in_tdp" {
-  type        = "ingress"
-  from_port   = 1194
-  to_port     = 1194
-  protocol    = "tcp"
-  cidr_blocks = ["${split(",",var.cidr_whitelist)}"]
-
-  security_group_id = "${module.asg.sg_id}"
+resource "aws_security_group_rule" "allow_openvpn_in_tcp" {
+  type              = "ingress"
+  from_port         = 1194
+  to_port           = 1194
+  protocol          = "tcp"
+  cidr_blocks       = ["${split(",",var.cidr_whitelist)}"]
+  security_group_id = "${module.cluster.sg_id}"
 }
 
-resource "aws_security_group_rule" "allow_ping_request_icmp" {
-  type        = "ingress"
-  from_port   = 8
-  to_port     = 0
-  protocol    = "icmp"
-  cidr_blocks = ["0.0.0.0/0"]
-
-  security_group_id = "${module.asg.sg_id}"
+resource "aws_security_group_rule" "allow_ping_in_icmp" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${module.cluster.sg_id}"
 }
 
-resource "aws_security_group_rule" "allow_ping_reply_icmp" {
-  type        = "ingress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "icmp"
-  cidr_blocks = ["0.0.0.0/0"]
-
-  security_group_id = "${module.asg.sg_id}"
-}
-
-/* ---------------------------- */
-/* User Data                    */
-/* ---------------------------- */
+## Creates instance user data
 resource "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.tpl")}"
 
   vars {
-    instance_number  = "${count.index}"
-    hostname         = "${var.role}-${count.index}"
-    region           = "${var.region}"
-    stack_item_label = "${var.stack_item_label}"
-    role             = "${var.role}"
-    s3_path          = "${var.s3_path}"
+    s3_bucket        = "${var.s3_bucket}"
+    s3_bucket_prefix = "${var.s3_bucket_prefix}"
     route_cidrs      = "${var.route_cidrs}"
   }
 
@@ -162,12 +139,13 @@ resource "template_file" "user_data" {
   }
 }
 
-module "asg" {
+## Creates auto scaling cluster
+module "cluster" {
   source = "github.com/unifio/terraform-aws-asg?ref=v0.2.0//group"
 
   # Resource tags
-  stack_item_label    = "${var.stack_item_label}-vpn-asg"
-  stack_item_fullname = "${var.stack_item_fullname}-vpn"
+  stack_item_label    = "${var.stack_item_label}"
+  stack_item_fullname = "${var.stack_item_fullname}"
 
   # VPC parameters
   vpc_id  = "${var.vpc_id}"
@@ -186,17 +164,16 @@ module "asg" {
   max_size         = 2
   min_size         = 1
   hc_grace_period  = 300
-  hc_check_type    = "EC2"
   min_elb_capacity = 1
   load_balancers   = "${aws_elb.elb.id}"
 }
 
-# Create a new load balancer
+## Creates a load balancer
 resource "aws_elb" "elb" {
-  name            = "${var.stack_item_label}-vpn-elb"
+  name            = "${var.stack_item_label}"
   subnets         = ["${split(",",var.subnets)}"]
   internal        = false
-  security_groups = ["${module.asg.sg_id}"]
+  security_groups = ["${module.cluster.sg_id}"]
 
   listener {
     instance_port     = 1194
@@ -214,11 +191,12 @@ resource "aws_elb" "elb" {
   }
 
   tags {
-    Name        = "${var.stack_item_label}-vpn-elb"
-    application = "${var.stack_item_label}-vpn"
+    Name        = "${var.stack_item_label}"
+    application = "${var.stack_item_fullname}"
     managed_by  = "terraform"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
-
-# Create a Route53 record
-
