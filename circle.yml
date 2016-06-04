@@ -1,0 +1,14 @@
+machine:
+  environment:
+    TF_VERSION: 0.6.16
+    TF_URL: https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+dependencies:
+  pre:
+    - "[[ -f \"${HOME}/bin/terraform\" ]] || (wget -O \"/tmp/tf.zip\" \"${TF_URL}\" && unzip -o -d \"${HOME}/bin\" \"/tmp/tf.zip\")"
+    - terraform version
+test:
+  override:
+    # Style check
+    - "[ $(terraform fmt -write=false | wc -l) -eq 0 ]"
+    # Verify plan
+    - bundle exec rake
