@@ -1,10 +1,5 @@
 # OpenVPN Server
 
-## Configures providers
-provider "aws" {
-  region = "${var.region}"
-}
-
 ## Creates IAM role & policies
 resource "aws_iam_role" "vpn_role" {
   name = "${var.stack_item_label}-${var.region}"
