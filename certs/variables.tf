@@ -12,17 +12,6 @@ variable "stack_item_fullname" {
 }
 
 ## VPC parameters
-
-###
-### 0 - if instance is a standalone instance outside a VPC
-### 1 - if instance is in a vpc
-###
-variable "in_vpc" {
-  type        = "string"
-  description = "Flag for associating the cluster with a VPC."
-  default     = 1
-}
-
 variable "vpc_id" {
   type        = "string"
   description = "ID of the target VPC."
@@ -74,8 +63,14 @@ variable "s3_bucket_prefix" {
   default     = ""
 }
 
-variable "cidr_whitelist" {
+variable "vpn_whitelist" {
   type        = "string"
-  description = "Limit access to the designated list of CIDRs"
+  description = "Limit VPN access to the designated list of CIDRs"
+  default     = "0.0.0.0/0"
+}
+
+variable "ssh_whitelist" {
+  type        = "string"
+  description = "Limit SSH access to the designated list of CIDRs"
   default     = "0.0.0.0/0"
 }
