@@ -1,9 +1,8 @@
-# OpenVPN Generate Certs
+# OpenVPN Certificate Generator
 
-## Creates IAM Role & Instance Profile
-# TODO: figure out how to de-dup
-resource "aws_iam_role" "gen_certs_role" {
-  name = "${var.stack_item_label}-${var.region}-gen-certs"
+## Creates IAM role & policies
+resource "aws_iam_role" "role" {
+  name = "${var.stack_item_label}-${var.region}"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -22,9 +21,9 @@ resource "aws_iam_role" "gen_certs_role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "s3_gen_certs" {
-  name = "s3_gen_certs"
-  role = "${aws_iam_role.gen_certs_role.id}"
+resource "aws_iam_role_policy" "s3_certs_rw" {
+  name = "s3_certs_rw"
+  role = "${aws_iam_role.role.id}"
 
   policy = <<EOF
 {
@@ -37,8 +36,8 @@ resource "aws_iam_role_policy" "s3_gen_certs" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::${replace(var.s3_root_path,"/(\/)+$/","")}",
-        "arn:aws:s3:::${replace(var.s3_root_path,"/(\/)+$/","")}/*"
+        "arn:aws:s3:::${var.s3_bucket}",
+        "arn:aws:s3:::${var.s3_bucket}/*"
       ]
     },
     {
@@ -47,7 +46,7 @@ resource "aws_iam_role_policy" "s3_gen_certs" {
         "s3:List*"
       ],
       "Resource": [
-        "arn:aws:s3:::${element(split("/", var.s3_root_path), 0)}"
+        "arn:aws:s3:::${var.s3_bucket}"
       ]
     }
   ]
@@ -55,9 +54,9 @@ resource "aws_iam_role_policy" "s3_gen_certs" {
 EOF
 }
 
-resource "aws_iam_role_policy" "gen_certs_tags" {
-  name = "gen-certs-tags"
-  role = "${aws_iam_role.gen_certs_role.id}"
+resource "aws_iam_role_policy" "tags" {
+  name = "tags"
+  role = "${aws_iam_role.role.id}"
 
   policy = <<EOF
 {
@@ -79,24 +78,40 @@ EOF
 }
 
 ## Creates IAM instance profile
-resource "aws_iam_instance_profile" "gen_certs_profile" {
-  name  = "${var.stack_item_label}-${var.region}-gen-certs"
-  roles = ["${aws_iam_role.gen_certs_role.name}"]
+resource "aws_iam_instance_profile" "profile" {
+  name  = "${var.stack_item_label}-${var.region}"
+  roles = ["${aws_iam_role.role.name}"]
 }
 
 ## Creates security group rules
-resource "aws_security_group" "generate_certs_sg" {
-  name        = "${var.stack_item_label}-${var.region}-gen-certs-sg"
-  description = "${stack_item_fullname} security group"
+resource "aws_security_group" "sg_cert_gen" {
+  name_prefix = "${var.stack_item_label}-${var.region}-"
+  description = "${var.stack_item_fullname} security group"
+  vpc_id      = "${var.vpc_id}"
+
+  tags {
+    Name        = "${var.stack_item_label}"
+    application = "${var.stack_item_fullname}"
+    managed_by  = "terraform"
+  }
 }
 
-resource "aws_security_group_rule" "allow_ssh_in_tcp" {
+resource "aws_security_group_rule" "allow_all_out" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.sg_cert_gen.id}"
+}
+
+resource "aws_security_group_rule" "allow_ssh_in" {
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["${split(",",var.cidr_whitelist)}"]
-  security_group_id = "${aws_security_group.generate_certs_sg.id}"
+  security_group_id = "${aws_security_group.sg_cert_gen.id}"
 }
 
 ## Creates user instance data
@@ -104,38 +119,39 @@ resource "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.tpl")}"
 
   vars {
-    s3_region         = "${var.region}"
-    s3_cert_root_path = "s3://${var.s3_root_path}"
-    key_size          = "${var.cert_key_size}"
-    s3_dir_override   = "${var.s3_dir_override}"
-    key_city          = "${var.key_city}"
-    key_org           = "${var.key_org}"
-    key_email         = "${var.key_email}"
-    key_ou            = "${var.key_ou}"
-    cert_key_name     = "${var.cert_key_name}"
-    key_country       = "${var.key_country}"
-    key_province      = "${var.key_province}"
-    active_clients    = "${var.active_clients}"
-    revoked_clients   = "${var.revoked_clients}"
-    openvpn_host      = "${var.openvpn_host}"
-    force_cert_regen  = "${var.force_cert_regen}"
-    s3_push_dryrun    = "${var.s3_push_dryrun}"
+    active_clients   = "${var.active_clients}"
+    cert_key_name    = "${var.cert_key_name}"
+    cert_key_size    = "${var.cert_key_size}"
+    force_cert_regen = "${var.force_cert_regen}"
+    hostname         = "${var.stack_item_label}"
+    key_city         = "${var.key_city}"
+    key_country      = "${var.key_country}"
+    key_email        = "${var.key_email}"
+    key_org          = "${var.key_org}"
+    key_ou           = "${var.key_ou}"
+    key_province     = "${var.key_province}"
+    openvpn_host     = "${var.openvpn_host}"
+    region           = "${var.region}"
+    revoked_clients  = "${var.revoked_clients}"
+    s3_bucket        = "${var.s3_bucket}"
+    s3_dir_override  = "${var.s3_bucket_prefix}"
+    s3_push_dryrun   = "${var.s3_push_dryrun}"
   }
 }
 
 ## Creates instance
 resource "aws_instance" "generate_certs" {
-  count                       = 1
-  ami                         = "${coalesce(lookup(var.ami_region_lookup, var.ami_region), var.ami_custom)}"
+  ami                         = "${coalesce(lookup(var.ami_region_lookup, var.region), var.ami_custom)}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${var.key_name}"
-  security_groups             = ["${aws_security_group.generate_certs_sg.name}"]
+  vpc_security_group_ids      = ["${aws_security_group.sg_cert_gen.id}"]
+  subnet_id                   = "${var.subnet}"
   associate_public_ip_address = true
-  iam_instance_profile        = "${aws_iam_instance_profile.gen_certs_profile.id}"
+  iam_instance_profile        = "${aws_iam_instance_profile.profile.id}"
 
   tags {
-    Name        = "${var.stack_item_label}-generate-certs"
-    application = "${var.stack_item_label}-generate-certs"
+    Name        = "${var.stack_item_label}"
+    application = "${var.stack_item_fullname}"
     managed_by  = "terraform"
   }
 
