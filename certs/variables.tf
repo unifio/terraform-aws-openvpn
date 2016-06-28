@@ -28,9 +28,21 @@ variable "subnets" {
 }
 
 ## OpenVPN parameters
-variable "ami" {
+variable "ami_custom" {
   type        = "string"
-  description = "Amazon Machine Image (AMI) to associate with the launch configuration."
+  description = "Custom AMI to utilize"
+  default     = ""
+}
+
+variable "ami_region_lookup" {
+  # Not meant to be overwritten
+  type = "map"
+
+  default = {
+    us-east-1      = "ami-d66995bb"
+    ap-northeast-1 = "ami-4803ec29"
+    custom         = ""
+  }
 }
 
 variable "instance_type" {

@@ -213,7 +213,7 @@ module "cluster" {
   region  = "${var.region}"
 
   # LC parameters
-  ami              = "${var.ami}"
+  ami              = "${coalesce(lookup(var.ami_region_lookup, var.region), var.ami_custom)}"
   instance_type    = "${var.instance_type}"
   instance_profile = "${aws_iam_instance_profile.profile.id}"
   user_data        = "${template_file.user_data.rendered}"

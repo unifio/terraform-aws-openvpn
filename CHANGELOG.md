@@ -11,11 +11,13 @@
 
 #### BREAKING CHANGES:
 - Updates in resource naming will cause churn for existing resources.
+- Updated certificate generator to require VPC deployment
 
 #### IMPROVEMENTS:
 - Standardization with other Unif.io OSS terraform modules
 - Documentation improvements
 - Updated security group scheme for OpenVPN server
+- Added pre-built AMI lookup to the server module
 
 ## 0.0.5
 
