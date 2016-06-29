@@ -35,8 +35,8 @@ resource "aws_iam_role_policy" "s3_certs_ro" {
         "s3:Get*"
       ],
       "Resource": [
-        "arn:aws:s3:::${var.s3_bucket}/${var.s3_bucket_prefix}",
-        "arn:aws:s3:::${var.s3_bucket}/${var.s3_bucket_prefix}/*"
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}/${replace(var.s3_bucket_prefix,"/^(\/)+|(\/)+$/","")}",
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}/${replace(var.s3_bucket_prefix,"/^(\/)+|(\/)+$/","")}/*"
       ]
     },
     {
@@ -45,7 +45,7 @@ resource "aws_iam_role_policy" "s3_certs_ro" {
         "s3:List*"
       ],
       "Resource": [
-        "arn:aws:s3:::${var.s3_bucket}"
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}"
       ]
     }
   ]
