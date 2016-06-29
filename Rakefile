@@ -11,6 +11,7 @@ inputs = {
   'route_cidrs'         => '10.10.0.0/25,10.10.0.128/25,10.10.4.0/25,10.10.4.128/25',
   's3_bucket'           => 'openvpn-certs',
   's3_bucket_prefix'    => '20160603',
+  'openvpn_host'        => 'vpn.example.io'
 }
 
 task :default => :verify
@@ -23,7 +24,7 @@ task :verify do
     vars.push("-var #{var}=\"#{value}\"")
   end
 
-  ['openvpn'].each do |stack|
+  ['server','cert-gen'].each do |stack|
     task_args = {:stack => stack, :args => vars.join(' ')}
     Rake::Task['clean'].execute(Rake::TaskArguments.new(task_args.keys, task_args.values))
     Rake::Task['plan'].execute(Rake::TaskArguments.new(task_args.keys, task_args.values))

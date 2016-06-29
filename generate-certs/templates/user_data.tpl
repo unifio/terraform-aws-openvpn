@@ -5,7 +5,7 @@ runcmd:
   - echo "S3_REGION=\"${region}\"" > /etc/default/openvpn-cert-generator
   - echo "S3_CERT_ROOT_PATH=\"s3://${replace(s3_bucket,"/(\/)+$/","")}/\"" >> /etc/default/openvpn-cert-generator
   - echo "KEY_SIZE=${cert_key_size}" >> /etc/default/openvpn-cert-generator
-  - echo "S3_DIR_OVERRIDE=\"${replace(s3_bucket_prefix,"/^(\/)+|(\/)+$/","")}\"" >> /etc/default/openvpn-cert-generator
+  - echo "S3_DIR_OVERRIDE=\"${replace(s3_dir_override,"/^(\/)+|(\/)+$/","")}\"" >> /etc/default/openvpn-cert-generator
   - echo "KEY_CITY=\"${key_city}\"" >> /etc/default/openvpn-cert-generator
   - echo "KEY_ORG=\"${key_org}\"" >> /etc/default/openvpn-cert-generator
   - echo "KEY_EMAIL=\"${key_email}\"" >> /etc/default/openvpn-cert-generator

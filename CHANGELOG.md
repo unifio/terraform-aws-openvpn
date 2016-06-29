@@ -7,6 +7,11 @@
 - Fix the 4 subnet fixed mapping
 - Fill in some examples
 
+## 0.0.7
+
+#### BUG FIXES:
+- Resolved regression in certificate generator user data template.
+
 ## 0.0.6
 
 #### BREAKING CHANGES:
