@@ -23,10 +23,6 @@ variable "subnets" {
 }
 
 ## OpenVPN parameters
-variable "ami" {
-  type = "string"
-}
-
 variable "instance_type" {
   type = "string"
 }
@@ -44,9 +40,5 @@ variable "s3_bucket" {
 }
 
 variable "s3_bucket_prefix" {
-  type = "string"
-}
-
-variable "cidr_whitelist" {
   type = "string"
 }

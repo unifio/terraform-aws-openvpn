@@ -19,11 +19,9 @@ module "openvpn_server" {
   subnets = "${var.subnets}"
 
   ## OpenVPN parameters
-  ami              = "${var.ami}"
   instance_type    = "${var.instance_type}"
   key_name         = "${var.key_name}"
   route_cidrs      = "${var.route_cidrs}"
   s3_bucket        = "${var.s3_bucket}"
   s3_bucket_prefix = "${var.s3_bucket_prefix}"
-  cidr_whitelist   = "${var.cidr_whitelist}"
 }

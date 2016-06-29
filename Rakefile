@@ -4,15 +4,13 @@ inputs = {
   'stack_item_label'    => 'expl-tst',
   'stack_item_fullname' => 'Example Stack',
   'vpc_id'              => 'vpc-xxxxxx',
-  'region'              => 'us-west-2',
+  'region'              => 'us-east-1',
   'subnets'             => 'subnet-111111,subnet-222222',
-  'ami'                 => 'ami-xxxxxx',
   'instance_type'       => 't2.small',
   'key_name'            => 'example',
   'route_cidrs'         => '10.10.0.0/25,10.10.0.128/25,10.10.4.0/25,10.10.4.128/25',
   's3_bucket'           => 'openvpn-certs',
   's3_bucket_prefix'    => '20160603',
-  'cidr_whitelist'      => '0.0.0.0/0'
 }
 
 task :default => :verify
