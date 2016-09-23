@@ -115,7 +115,7 @@ resource "aws_security_group_rule" "allow_ssh_in" {
 }
 
 ## Creates user instance data
-resource "template_file" "user_data" {
+data "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.tpl")}"
 
   vars {
@@ -155,5 +155,5 @@ resource "aws_instance" "generate_certs" {
     managed_by  = "terraform"
   }
 
-  user_data = "${template_file.user_data.rendered}"
+  user_data = "${data.template_file.user_data.rendered}"
 }

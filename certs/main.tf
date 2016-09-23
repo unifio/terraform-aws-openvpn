@@ -184,7 +184,7 @@ resource "aws_security_group_rule" "cluster_allow_icmp_in" {
 }
 
 ## Creates instance user data
-resource "template_file" "user_data" {
+data "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.tpl")}"
 
   vars {
@@ -192,10 +192,6 @@ resource "template_file" "user_data" {
     s3_bucket        = "${var.s3_bucket}"
     s3_bucket_prefix = "${var.s3_bucket_prefix}"
     route_cidrs      = "${var.route_cidrs}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -216,7 +212,7 @@ module "cluster" {
   ami              = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
   instance_type    = "${var.instance_type}"
   instance_profile = "${aws_iam_instance_profile.profile.id}"
-  user_data        = "${template_file.user_data.rendered}"
+  user_data        = "${data.template_file.user_data.rendered}"
   key_name         = "${var.key_name}"
   ebs_optimized    = false
 

@@ -7,6 +7,13 @@
 - Fix the 4 subnet fixed mapping
 - Fill in some examples
 
+## 0.0.8
+
+#### IMPROVEMENTS:
+- [#6]: (certs) - Simplify logic when specifying a custom ami.
+- [#7]: (generate-certs) - Terraform 0.7.x compatibility updates.
+- [#7]: (certs) - Terraform 0.7.x compatibility updates.
+
 ## 0.0.7
 
 #### BUG FIXES:
