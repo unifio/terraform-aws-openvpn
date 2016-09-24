@@ -21,7 +21,7 @@ task :verify do
 
   vars = []
   inputs.each() do |var, value|
-    vars.push("-var #{var}=\"#{value}\"")
+    vars.push("-var '#{var}=\"#{value}\"'")
   end
 
   ['server','cert-gen'].each do |stack|
