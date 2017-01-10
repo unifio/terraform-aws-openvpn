@@ -51,7 +51,7 @@ variable "region" {
 }
 
 variable "subnet" {
-  tpye        = "string"
+  type        = "string"
   description = "VPC subnet to associate with the instance"
 }
 
