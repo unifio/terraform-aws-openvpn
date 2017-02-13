@@ -36,8 +36,8 @@ resource "aws_iam_role_policy" "s3_certs_rw" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::${replace(var.s3_bucket,"/(/)+$/","")}",
-        "arn:aws:s3:::${replace(var.s3_bucket,"/(/)+$/","")}/*"
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}",
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}/*"
       ]
     },
     {
@@ -46,7 +46,7 @@ resource "aws_iam_role_policy" "s3_certs_rw" {
         "s3:List*"
       ],
       "Resource": [
-        "arn:aws:s3:::${replace(var.s3_bucket,"/(/)+$/","")}"
+        "arn:aws:s3:::${replace(var.s3_bucket,"/(\/)+$/","")}"
       ]
     }
   ]
