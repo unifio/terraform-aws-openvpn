@@ -1,7 +1,16 @@
 ## Unreleased
 
-## ???
+## 0.1.0
 
+#### BREAKING CHANGES:
+- Removed `\` backslash escapes. Breaks compatibility with Terraform versions < 0.8.0
+
+#### IMPROVEMENTS:
+- Update modules to use terraform 0.8.x syntax
+
+## 0.0.9
+
+#### IMPROVEMENTS:
 - Feature: Automatically push instance's subnet route into `server.conf`
 - export `zone_id`, `dns_name` from aws_elb
 - Fix the 4 subnet fixed mapping
