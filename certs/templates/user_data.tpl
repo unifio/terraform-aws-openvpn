@@ -1,4 +1,6 @@
 #cloud-config
+## The sed and daemon-reload entries are temporary and will be removed once permission issue is handled on base AMI.
+## https://github.com/WhistleLabs/terraform-aws-openvpn/pull/2
 runcmd:
   - echo "OPENVPN_CERT_SOURCE=s3://${replace(s3_bucket,"/(/)+$/","")}/${replace(s3_bucket_prefix,"/^(/)+|(/)+$/","")}" > /etc/openvpn/get-openvpn-certs.env
   - echo "push \"route $(ip route get 8.8.8.8| grep src| sed 's/.*src \(.*\)$/\1/g') 255.255.255.255 net_gateway\"" >> /etc/openvpn/server.conf
