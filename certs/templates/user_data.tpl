@@ -6,6 +6,8 @@ runcmd:
   - echo "push \"route ${cidrhost(element(split(",",route_cidrs),2), 0)}  ${cidrnetmask(element(split(",",route_cidrs),2))}\"" >> /etc/openvpn/server.conf
   - echo "push \"route ${cidrhost(element(split(",",route_cidrs),3), 0)}  ${cidrnetmask(element(split(",",route_cidrs),3))}\"" >> /etc/openvpn/server.conf
   - echo "push \"route ${cidrhost(element(split(",",route_cidrs),4), 0)}  ${cidrnetmask(element(split(",",route_cidrs),4))}\"" >> /etc/openvpn/server.conf
+  - sed -i 's/\(ExecStartPost=.*chmod.*$\)/ExecStartPost=\/bin\/chown -R nobody:nogroup \/etc\/openvpn\n\1\n/g' /etc/systemd/system/get-openvpn-certs.service
+  - systemctl daemon-reload
   - systemctl start get-openvpn-certs
   - systemctl restart openvpn@server
   - systemctl restart iptables
