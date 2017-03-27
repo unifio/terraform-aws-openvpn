@@ -35,7 +35,7 @@ variable "region" {
 }
 
 variable "subnets" {
-  tpye        = "string"
+  type        = "string"
   description = "List of VPC subnets eligible for instance deployment"
 }
 
