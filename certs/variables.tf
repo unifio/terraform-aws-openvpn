@@ -45,6 +45,12 @@ variable "ami_region_lookup" {
   }
 }
 
+variable "instance_based_naming_enabled" {
+  type        = "string"
+  description = "Flag to enable instance-id based name tagging."
+  default     = ""
+}
+
 variable "instance_type" {
   type        = "string"
   description = "EC2 instance type to associate with the launch configuration."

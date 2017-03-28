@@ -7,6 +7,16 @@
 - Fix the 4 subnet fixed mapping
 - Fill in some examples
 
+## 0.0.10
+
+#### IMPROVEMENTS:
+- Terraform 0.8.x compatibility updates.
+
+## 0.0.9
+
+#### IMPROVEMENTS:
+- Added AMIs in Oregon (us-west-2)
+
 ## 0.0.8
 
 #### IMPROVEMENTS:
