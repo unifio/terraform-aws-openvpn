@@ -197,7 +197,7 @@ data "template_file" "user_data" {
 
 ## Creates auto scaling cluster
 module "cluster" {
-  source = "github.com/unifio/terraform-aws-asg?ref=v0.2.0//group"
+  source = "github.com/unifio/terraform-aws-asg?ref=v0.3.0//group"
 
   # Resource tags
   stack_item_label    = "${var.stack_item_label}"
@@ -205,21 +205,20 @@ module "cluster" {
 
   # VPC parameters
   vpc_id  = "${var.vpc_id}"
-  subnets = "${var.subnets}"
-  region  = "${var.region}"
+  subnets = ["${var.subnets}"]
 
   # LC parameters
-  ami              = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
-  instance_type    = "${var.instance_type}"
-  instance_profile = "${aws_iam_instance_profile.profile.id}"
-  user_data        = "${data.template_file.user_data.rendered}"
-  key_name         = "${var.key_name}"
-  ebs_optimized    = false
+  ami                           = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
+  instance_based_naming_enabled = "${var.instance_based_naming_enabled}"
+  instance_type                 = "${var.instance_type}"
+  instance_profile              = "${aws_iam_instance_profile.profile.id}"
+  user_data                     = "${data.template_file.user_data.rendered}"
+  key_name                      = "${var.key_name}"
 
   # ASG parameters
   max_size         = 2
   min_size         = 1
   hc_grace_period  = 300
   min_elb_capacity = 1
-  load_balancers   = "${aws_elb.elb.id}"
+  load_balancers   = ["${aws_elb.elb.id}"]
 }
