@@ -79,8 +79,8 @@ EOF
 
 ## Creates IAM instance profile
 resource "aws_iam_instance_profile" "profile" {
-  name  = "${var.stack_item_label}-${var.region}"
-  roles = ["${aws_iam_role.role.name}"]
+  name = "${var.stack_item_label}-${var.region}"
+  role = "${aws_iam_role.role.name}"
 }
 
 ## Creates security group rules
