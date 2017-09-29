@@ -205,7 +205,7 @@ module "cluster" {
 
   # VPC parameters
   vpc_id  = "${var.vpc_id}"
-  subnets = "${var.subnets}"
+  subnets = ["${split(",",var.subnets)}"]
 
   # LC parameters
   ami              = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
