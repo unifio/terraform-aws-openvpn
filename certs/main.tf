@@ -208,12 +208,13 @@ module "cluster" {
   subnets = ["${split(",",var.subnets)}"]
 
   # LC parameters
-  ami              = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
-  instance_type    = "${var.instance_type}"
-  instance_profile = "${aws_iam_instance_profile.profile.id}"
-  user_data        = "${data.template_file.user_data.rendered}"
-  key_name         = "${var.key_name}"
-  ebs_optimized    = false
+  ami               = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
+  enable_monitoring = true
+  instance_type     = "${var.instance_type}"
+  instance_profile  = "${aws_iam_instance_profile.profile.id}"
+  user_data         = "${data.template_file.user_data.rendered}"
+  key_name          = "${var.key_name}"
+  ebs_optimized     = false
 
   # ASG parameters
   max_size         = 2
