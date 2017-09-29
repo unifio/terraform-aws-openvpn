@@ -220,5 +220,5 @@ module "cluster" {
   min_size         = 1
   hc_grace_period  = 300
   min_elb_capacity = 1
-  load_balancers   = "${aws_elb.elb.id}"
+  load_balancers   = ["${split(",",aws_elb.elb.id)}"]
 }
