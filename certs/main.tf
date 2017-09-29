@@ -206,7 +206,6 @@ module "cluster" {
   # VPC parameters
   vpc_id  = "${var.vpc_id}"
   subnets = "${var.subnets}"
-  region  = "${var.region}"
 
   # LC parameters
   ami              = "${coalesce(var.ami_custom, lookup(var.ami_region_lookup, var.region))}"
