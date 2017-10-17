@@ -1,5 +1,9 @@
 # OpenVPN Server
 
+provider "template" {
+  version = "~> 0.1"
+}
+
 ## Creates IAM role & policies
 resource "aws_iam_role" "role" {
   name = "${var.stack_item_label}-${var.region}"
