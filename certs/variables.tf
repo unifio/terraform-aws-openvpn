@@ -39,8 +39,8 @@ variable "ami_region_lookup" {
   type = "map"
 
   default = {
-    us-east-1      = "ami-d86a67ce"
-    us-east-2      = "ami-d7c9eab2"
+    us-east-1      = "ami-6f77ff15"
+    us-east-2      = "ami-2ef7d94b"
   }
 }
 
