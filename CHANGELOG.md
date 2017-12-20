@@ -1,5 +1,10 @@
 ## Unreleased
 
+## 0.2.0
+
+#### IMPROVEMENTS:
+- Update server.conf with VPC DNS IP address
+
 ## 0.1.0
 
 #### BREAKING CHANGES:
