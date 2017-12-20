@@ -196,6 +196,7 @@ data "template_file" "user_data" {
     s3_bucket        = "${var.s3_bucket}"
     s3_bucket_prefix = "${var.s3_bucket_prefix}"
     route_cidrs      = "${var.route_cidrs}"
+    vpc_dns_ip       = "${var.vpc_dns_ip}"
   }
 }
 

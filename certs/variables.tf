@@ -74,14 +74,20 @@ variable "s3_bucket_prefix" {
   default     = ""
 }
 
+variable "ssh_whitelist" {
+  type        = "string"
+  description = "Limit SSH access to the designated list of CIDRs"
+  default     = "0.0.0.0/0"
+}
+
+variable "vpc_dns_ip" {
+  type        = "string"
+  description = "DNS IP address for the VPC."
+}
+
 variable "vpn_whitelist" {
   type        = "string"
   description = "Limit VPN access to the designated list of CIDRs"
   default     = "0.0.0.0/0"
 }
 
-variable "ssh_whitelist" {
-  type        = "string"
-  description = "Limit SSH access to the designated list of CIDRs"
-  default     = "0.0.0.0/0"
-}
