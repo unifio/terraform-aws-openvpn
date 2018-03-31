@@ -28,6 +28,12 @@ variable "subnets" {
 }
 
 ## OpenVPN parameters
+variable "additional_routes" {
+  type        = "string"
+  description = "Additional routes to add to Openvpn Config"
+  default     = ""
+}
+
 variable "ami_custom" {
   type        = "string"
   description = "Custom AMI to utilize"
@@ -39,9 +45,21 @@ variable "ami_region_lookup" {
   type = "map"
 
   default = {
-    us-east-1      = "ami-44e8913e"
-    us-east-2      = "ami-d1c9e1b4"
+    us-east-1 = "ami-44e8913e"
+    us-east-2 = "ami-d1c9e1b4"
   }
+}
+
+variable "assign_eip" {
+  type        = "string"
+  description = "Boolean to determine if Elastic IP should be assigned to host"
+  default     = "false"
+}
+
+variable "eip_tag" {
+  type        = "string"
+  description = "Tag used to lookup Elastic IP to assign"
+  default     = ""
 }
 
 variable "instance_type" {
@@ -90,4 +108,3 @@ variable "vpn_whitelist" {
   description = "Limit VPN access to the designated list of CIDRs"
   default     = "0.0.0.0/0"
 }
-

@@ -69,6 +69,7 @@ resource "aws_iam_role_policy" "tags" {
       "Effect": "Allow",
       "Action": [
           "ec2:CreateTags",
+          "ec2:DescribeTags",
           "ec2:AssociateAddress",
           "ec2:DescribeAddresses",
           "ec2:DescribeInstances"
@@ -187,16 +188,31 @@ resource "aws_security_group_rule" "cluster_allow_icmp_in" {
   security_group_id = "${module.cluster.sg_id}"
 }
 
+resource "aws_eip" "openvpn_eip" {
+  count = "${var.assign_eip == "true" ? 1 : 0}"
+  vpc   = true
+
+  tags {
+    application = "${var.stack_item_fullname}"
+    managed_by  = "terraform"
+    Name        = "${var.stack_item_label}"
+  }
+}
+
 ## Creates instance user data
 data "template_file" "user_data" {
   template = "${file("${path.module}/templates/user_data.tpl")}"
 
   vars {
-    hostname         = "${var.stack_item_label}"
-    s3_bucket        = "${var.s3_bucket}"
-    s3_bucket_prefix = "${var.s3_bucket_prefix}"
-    route_cidrs      = "${var.route_cidrs}"
-    vpc_dns_ip       = "${var.vpc_dns_ip}"
+    additional_routes = "${var.additional_routes}"
+    assign_eip        = "${var.assign_eip}"
+    hostname          = "${var.stack_item_label}"
+    s3_bucket         = "${var.s3_bucket}"
+    s3_bucket_prefix  = "${var.s3_bucket_prefix}"
+    stack_item_label  = "${var.stack_item_label}"
+    region            = "${var.region}"
+    route_cidrs       = "${var.route_cidrs}"
+    vpc_dns_ip        = "${var.vpc_dns_ip}"
   }
 }
 

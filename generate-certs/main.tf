@@ -70,6 +70,7 @@ resource "aws_iam_role_policy" "tags" {
       "Effect": "Allow",
       "Action": [
           "ec2:CreateTags",
+          "ec2:DescribeTags",
           "ec2:AssociateAddress",
           "ec2:DescribeAddresses",
           "ec2:DescribeInstances"
