@@ -1,0 +1,95 @@
+version: 2
+
+common_steps: &common_steps
+ - checkout
+ - run:
+     name: "Setup cache key"
+     command: |
+       echo $TF_VERSION > /tmp/tf_version
+ - restore_cache:
+     keys:
+       - terraform-{{ checksum "/tmp/tf_version" }}
+       # if this breaks later due to some updated ruby docker version we can deal with cache-busting scenarios then.
+       - ruby-{{ checksum "/tmp/tf_version" }}-bundle
+ - run:
+     name: "Install terraform"
+     command: |
+       if [ ! -f "/tmp/terraform" ]; then
+         wget -O "/tmp/tf.zip" https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip && unzip -o -d "/tmp/terraform" "/tmp/tf.zip"
+       fi
+       chmod +x /tmp/terraform/terraform
+       sudo cp /tmp/terraform/terraform /usr/local/bin/
+ - run:
+     name: "Test: terraform version"
+     command: terraform version
+ - run:
+     name: "Test: style check"
+     command: "[ $(terraform fmt -write=false | wc -l) -eq 0 ]"
+ - run:
+     name: "Test: verify plan"
+     command: |
+       bundle install
+
+       if [ "$TF_LEGACY" != "true" ]; then
+         for example in $(ls -d examples/*/); do
+           pushd $example
+           terraform init
+           popd
+         done
+       fi
+
+       bundle exec rake
+
+ - save_cache:
+     key: terraform-{{ checksum "/tmp/tf_version" }}
+     paths:
+       - /tmp/terraform
+ - save_cache:
+     key: ruby-{{ checksum "/tmp/tf_version" }}-bundle
+     paths:
+       - /usr/local/bundle
+
+jobs:
+  0.8.8:
+    docker:
+      - image: circleci/ruby
+    environment:
+      - TF_VERSION: 0.8.8
+      - TF_LEGACY: true
+    steps: *common_steps
+  0.9.11:
+    docker:
+      - image: circleci/ruby
+    environment:
+      - TF_VERSION: 0.9.11
+      - TF_LEGACY: true
+    steps: *common_steps
+  0.10.7:
+    docker:
+      - image: circleci/ruby
+    environment:
+      - TF_VERSION: 0.10.7
+    steps: *common_steps
+  0.11.5:
+    docker:
+      - image: circleci/ruby
+    environment:
+      - TF_VERSION: 0.11.5
+    steps: *common_steps
+
+workflows:
+  version: 2
+
+  some_flow:
+    jobs:
+      - 0.8.8
+      - 0.9.11
+      - 0.10.7
+      - 0.11.5
+
+
+#experimental:
+  #notify:
+    #branches:
+      #only:
+        #- master

@@ -1,4 +1,5 @@
 require 'rake'
+require 'semantic'
 
 inputs = {
   'stack_item_label'    => 'expl-tst',
@@ -34,6 +35,10 @@ end
 desc "Remove existing local state if present"
 task :clean, [:stack] do |t, args|
   sh "cd examples/#{args['stack']} && rm -fr .terraform *.tfstate*"
+  terraform_version = `terraform version`.split("\n", 2)[0].gsub('Terraform v','')
+  if Semantic::Version.new(terraform_version) >= Semantic::Version.new("0.10.0")
+    sh "cd examples/#{args['stack']} && terraform init"
+  end
 end
 
 desc "Create execution plan"
