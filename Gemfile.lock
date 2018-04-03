@@ -2,12 +2,14 @@ GEM
   remote: http://rubygems.org/
   specs:
     rake (11.1.2)
+    semantic (1.6.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   rake
+  semantic (~> 1.6.1)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
