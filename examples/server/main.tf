@@ -24,4 +24,8 @@ module "openvpn_server" {
   route_cidrs      = "${var.route_cidrs}"
   s3_bucket        = "${var.s3_bucket}"
   s3_bucket_prefix = "${var.s3_bucket_prefix}"
+
+  assign_eip = "true"
+  eip_tag    = "openvpn-instance"
+  vpc_dns_ip = "1.1.1.1"
 }
