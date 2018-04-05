@@ -15,3 +15,7 @@ output "vpn_elb_dns_name" {
 output "vpn_elb_zone_id" {
   value = "${aws_elb.elb.zone_id}"
 }
+
+output "role_id_openvpn" {
+  value = "${aws_iam_role.role.unique_id}"
+}

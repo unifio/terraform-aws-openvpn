@@ -1,5 +1,9 @@
 # OpenVPN Certificate Generator
 
+provider "template" {
+  version = "~> 0.1"
+}
+
 ## Creates IAM role & policies
 resource "aws_iam_role" "role" {
   name = "${var.stack_item_label}-${var.region}"
@@ -66,6 +70,7 @@ resource "aws_iam_role_policy" "tags" {
       "Effect": "Allow",
       "Action": [
           "ec2:CreateTags",
+          "ec2:DescribeTags",
           "ec2:AssociateAddress",
           "ec2:DescribeAddresses",
           "ec2:DescribeInstances"
@@ -79,8 +84,8 @@ EOF
 
 ## Creates IAM instance profile
 resource "aws_iam_instance_profile" "profile" {
-  name  = "${var.stack_item_label}-${var.region}"
-  roles = ["${aws_iam_role.role.name}"]
+  name = "${var.stack_item_label}-${var.region}"
+  role = "${aws_iam_role.role.name}"
 }
 
 ## Creates security group rules

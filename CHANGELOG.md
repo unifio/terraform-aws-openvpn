@@ -1,11 +1,31 @@
 ## Unreleased
 
-## ???
+## 1.0.0
 
+#### IMPROVEMENTS:
+
+Rollup fixes from whistle/terraform-aws-openvpn 0.0.9 - 0.2.5
+- Update server.conf with VPC DNS IP address
 - Feature: Automatically push instance's subnet route into `server.conf`
 - export `zone_id`, `dns_name` from aws_elb
 - Fix the 4 subnet fixed mapping
 - Fill in some examples
+- Add additional configuration options to Openvpn (#15)
+  * Add eip and extra route capability
+  * Update formatting
+  * Fix the tag filter
+- OpenVPN CertGen RoleID Output (DEVOPS-1692)
+- OpenVPN RoleID Output (DEVOPS-1613)
+- Configure DNS entry in server.conf
+- Pin template provider version
+- Adding crl-verify to server.conf
+- Change permissions temporarily in user_data to avoid AMI change
+
+
+## 0.0.11
+
+#### IMPROVEMENTS:
+- Terraform 0.8.x compatibility updates.
 
 ## 0.0.10
 
