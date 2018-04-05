@@ -107,6 +107,7 @@ variable "ssh_whitelist" {
 variable "vpc_dns_ip" {
   type        = "string"
   description = "DNS IP address for the VPC."
+  default     = ""
 }
 
 variable "vpn_whitelist" {

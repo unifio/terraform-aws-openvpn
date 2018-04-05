@@ -2,7 +2,7 @@
 runcmd:
   - export INSTANCE_ID=`curl http://169.254.169.254/latest/meta-data/instance-id`
   - echo "OPENVPN_CERT_SOURCE=s3://${replace(s3_bucket,"/(/)+$/","")}/${replace(s3_bucket_prefix,"/^(/)+|(/)+$/","")}" > /etc/openvpn/get-openvpn-certs.env
-  - echo "push \"dhcp-option DNS ${vpc_dns_ip}\"" >> /etc/openvpn/server.conf
+  - if [ -n "${vpc_dns_ip}" ]; then echo "push \"dhcp-option DNS ${vpc_dns_ip}\"" >> /etc/openvpn/server.conf;fi
   - echo 'crl-verify /etc/openvpn/keys/crl.pem' >> /etc/openvpn/server.conf
   - echo "push \"route $(ip route get 8.8.8.8| grep src| sed 's/.*src \(.*\)$/\1/g') 255.255.255.255 net_gateway\"" >> /etc/openvpn/server.conf
   - echo "push \"route ${cidrhost(element(split(",",route_cidrs),1), 0)}  ${cidrnetmask(element(split(",",route_cidrs),1))}\"" >> /etc/openvpn/server.conf
