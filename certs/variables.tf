@@ -28,6 +28,12 @@ variable "subnets" {
 }
 
 ## OpenVPN parameters
+variable "additional_routes" {
+  type        = "string"
+  description = "Additional routes to add to Openvpn Config"
+  default     = ""
+}
+
 variable "ami_custom" {
   type        = "string"
   description = "Custom AMI to utilize"
@@ -39,15 +45,28 @@ variable "ami_region_lookup" {
   type = "map"
 
   default = {
-    us-east-1      = "ami-d66995bb"
-    ap-northeast-1 = "ami-4803ec29"
-    us-west-2      = "ami-4308a323"
+    us-east-1      = "ami-6934c804"
+    ap-northeast-1 = "ami-b036d9d1"
+    us-west-2      = "ami-530fa433"
+    custom         = ""
   }
 }
 
 variable "instance_based_naming_enabled" {
   type        = "string"
   description = "Flag to enable instance-id based name tagging."
+  default     = ""
+}
+
+variable "assign_eip" {
+  type        = "string"
+  description = "Boolean to determine if Elastic IP should be assigned to host"
+  default     = "false"
+}
+
+variable "eip_tag" {
+  type        = "string"
+  description = "Tag used to lookup Elastic IP to assign"
   default     = ""
 }
 
@@ -81,14 +100,20 @@ variable "s3_bucket_prefix" {
   default     = ""
 }
 
-variable "vpn_whitelist" {
-  type        = "string"
-  description = "Limit VPN access to the designated list of CIDRs"
-  default     = "0.0.0.0/0"
-}
-
 variable "ssh_whitelist" {
   type        = "string"
   description = "Limit SSH access to the designated list of CIDRs"
+  default     = "0.0.0.0/0"
+}
+
+variable "vpc_dns_ip" {
+  type        = "string"
+  description = "DNS IP address for the VPC."
+  default     = ""
+}
+
+variable "vpn_whitelist" {
+  type        = "string"
+  description = "Limit VPN access to the designated list of CIDRs"
   default     = "0.0.0.0/0"
 }
