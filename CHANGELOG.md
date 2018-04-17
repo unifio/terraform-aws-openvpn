@@ -1,5 +1,8 @@
 ## Unreleased
 
+* Bring in covalence to help with bootstrapping/testing. Consider some kitchen/localstack testing.
+* PoC docker-openvpn-server modules
+
 ## 1.0.0
 
 #### IMPROVEMENTS:
