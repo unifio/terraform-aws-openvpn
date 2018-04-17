@@ -1,2 +1,4 @@
 *.tfstate*
 .terraform/
+docker-openvpn-server/terraform.tfvars*
+docker-openvpn-server/.env
