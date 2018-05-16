@@ -1,5 +1,5 @@
 provider "template" {
-  version = "~> 1.0.0"
+  version = ">= 0.1.0"
 }
 
 locals {
@@ -53,6 +53,6 @@ module "cluster" {
   instance_tags     = "${var.instance_tags}"
   max_size          = 2
   min_size          = 1
-  hc_grace_period   = 300
+  hc_grace_period   = "${var.hc_grace_period}"
   target_group_arns = "${var.lb_target_group_arns}"
 }

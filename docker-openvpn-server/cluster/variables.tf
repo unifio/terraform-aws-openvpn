@@ -121,7 +121,7 @@ variable "assign_eip" {
 variable "route_cidrs" {
   type        = "string"
   description = "Routes for the VPN server to expose"
-  default     = ""
+  default     = "10.8.0.0/24"
 }
 
 variable "s3_bucket_prefix_for_service" {
@@ -164,4 +164,10 @@ variable "lb_target_group_arns" {
   type        = "list"
   description = "target group arns to associate with the NLB, if enable_lb == true"
   default     = []
+}
+
+variable "hc_grace_period" {
+  type        = "string"
+  description = "Health check grace period for ASG"
+  default     = "300"
 }
