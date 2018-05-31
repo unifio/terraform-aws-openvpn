@@ -218,7 +218,7 @@ data "template_file" "user_data" {
 
 ## Creates auto scaling cluster
 module "cluster" {
-  source = "github.com/unifio/terraform-aws-asg?ref=v0.3.1//group"
+  source = "github.com/unifio/terraform-aws-asg?ref=v0.3.5//group"
 
   # Resource tags
   stack_item_label    = "${var.stack_item_label}"
