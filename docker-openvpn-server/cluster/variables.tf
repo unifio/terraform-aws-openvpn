@@ -60,6 +60,12 @@ variable "instance_tags" {
   }
 }
 
+variable "additional_asg_tags" {
+  type        = "list"
+  description = "Additional tags to apply at the ASG level, if any"
+  default     = []
+}
+
 variable "enabled_metrics" {
   type = "list"
 
