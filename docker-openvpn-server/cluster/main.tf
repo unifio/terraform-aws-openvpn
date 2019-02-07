@@ -38,14 +38,15 @@ module "cluster" {
 
   # LC parameters
   ami                           = "${coalesce(var.ami_custom, data.aws_ami.cluster_ami.id)}"
+  associate_public_ip_address   = "${var.associate_public_ip_address}"
   ebs_optimized                 = "false"
   enable_monitoring             = "true"
   instance_based_naming_enabled = "${var.instance_based_naming_enabled}"
   instance_profile              = "${aws_iam_instance_profile.profile.id}"
   instance_type                 = "${var.instance_type}"
   key_name                      = "${var.key_name}"
+  root_vol_size                 = "${var.root_vol_size}"
   user_data                     = "${coalesce(var.ami_custom_user_data, data.template_file.user_data.rendered)}"
-  associate_public_ip_address   = "${var.associate_public_ip_address}"
 
   # ASG parameters
   enabled_metrics   = "${var.enabled_metrics}"
