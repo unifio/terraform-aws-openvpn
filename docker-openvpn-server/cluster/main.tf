@@ -26,7 +26,7 @@ data "template_file" "user_data" {
 
 ## Creates auto scaling cluster
 module "cluster" {
-  source = "github.com/unifio/terraform-aws-asg?ref=v0.3.5//group"
+  source = "github.com/unifio/terraform-aws-asg?ref=v0.3.6//group"
 
   # Resource tags
   stack_item_label    = "${var.stack_item_label}"
@@ -49,11 +49,12 @@ module "cluster" {
   user_data                     = "${coalesce(var.ami_custom_user_data, data.template_file.user_data.rendered)}"
 
   # ASG parameters
-  enabled_metrics   = "${var.enabled_metrics}"
-  hc_check_type     = "${var.enable_lb == "true" ? "ELB" : "EC2"}"
-  instance_tags     = "${var.instance_tags}"
-  max_size          = 2
-  min_size          = 1
-  hc_grace_period   = "${var.hc_grace_period}"
-  target_group_arns = "${var.lb_target_group_arns}"
+  additional_asg_tags = "${var.additional_asg_tags}"
+  enabled_metrics     = "${var.enabled_metrics}"
+  hc_check_type       = "${var.enable_lb == "true" ? "ELB" : "EC2"}"
+  instance_tags       = "${var.instance_tags}"
+  max_size            = 2
+  min_size            = 1
+  hc_grace_period     = "${var.hc_grace_period}"
+  target_group_arns   = "${var.lb_target_group_arns}"
 }
