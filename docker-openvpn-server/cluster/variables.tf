@@ -28,6 +28,11 @@ variable "key_name" {
   description = "SSH key pair to associate with the launch configuration."
 }
 
+variable "root_vol_size" {
+  type        = "string"
+  description = "Size of the AMI root volume in GB"
+}
+
 variable "vpc_id" {
   type        = "string"
   description = "ID of the target VPC."
