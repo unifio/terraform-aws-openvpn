@@ -6,3 +6,4 @@ data "aws_ami" "cluster_ami" {
     values = ["amzn-ami-*-amazon-ecs-optimized"]
   }
 }
+

@@ -2,43 +2,44 @@
 
 ## Resource tags
 variable "stack_item_label" {
-  type = "string"
+  type = string
 }
 
 variable "stack_item_fullname" {
-  type = "string"
+  type = string
 }
 
 ## VPC parameters
 variable "vpc_id" {
-  type = "string"
+  type = string
 }
 
 variable "region" {
-  type = "string"
+  type = string
 }
 
 variable "subnets" {
-  type = "string"
+  type = string
 }
 
 ## OpenVPN parameters
 variable "instance_type" {
-  type = "string"
+  type = string
 }
 
 variable "key_name" {
-  type = "string"
+  type = string
 }
 
 variable "route_cidrs" {
-  type = "string"
+  type = string
 }
 
 variable "s3_bucket" {
-  type = "string"
+  type = string
 }
 
 variable "s3_bucket_prefix" {
-  type = "string"
+  type = string
 }
+
