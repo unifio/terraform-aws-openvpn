@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "cluster" {
-  source = "cluster"
+  source = "./cluster"
 
   stack_item_label              = "${var.stack_item_label}"
   stack_item_fullname           = "${var.stack_item_fullname}"
@@ -35,7 +35,7 @@ module "cluster" {
 }
 
 module "endpoint" {
-  source = "endpoint"
+  source = "./endpoint"
 
   stack_item_label      = "${var.stack_item_label}"
   stack_item_fullname   = "${var.stack_item_fullname}"
