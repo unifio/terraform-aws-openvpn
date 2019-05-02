@@ -1,7 +1,7 @@
 # OpenVPN Certificate Generator
 
 provider "template" {
-  version = "~> 0.1"
+  version = "~> 2.1"
 }
 
 ## Creates IAM role & policies
