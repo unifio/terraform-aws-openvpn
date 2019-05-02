@@ -218,7 +218,7 @@ data "template_file" "user_data" {
 
 ## Creates auto scaling cluster
 module "cluster" {
-  source = "github.com/whistlelabs/terraform-aws-asg?ref=v0.3.5//group"
+  source = "github.com/whistlelabs/terraform-aws-asg?ref=upgrade-0.12//group"
 
   # Resource tags
   stack_item_label    = "${var.stack_item_label}"
