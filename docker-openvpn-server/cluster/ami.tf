@@ -1,4 +1,5 @@
 data "aws_ami" "cluster_ami" {
+  owners = ["self"]
   most_recent = true
 
   filter {
