@@ -34,7 +34,7 @@ module "cluster" {
 
   # VPC parameters
   vpc_id  = var.vpc_id
-  subnets = [split(",", var.subnets)]
+  subnets = split(",", var.subnets)
 
   # LC parameters
   ami                           = coalesce(var.ami_custom, data.aws_ami.cluster_ami.id)
