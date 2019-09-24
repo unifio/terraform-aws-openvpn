@@ -16,7 +16,7 @@ locals {
 ## Creates IAM role & policies
 resource "aws_iam_role" "role" {
   name = local.local_iam_name
-  path = "/"
+  path = var.iam_path
 
   assume_role_policy = <<EOF
 {

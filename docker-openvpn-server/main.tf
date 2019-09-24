@@ -26,7 +26,6 @@ module "cluster" {
   additional_routes             = var.additional_routes
   assign_eip                    = var.assign_eip
   route_cidrs                   = var.route_cidrs
-  additional_routes             = var.additional_routes
   vpc_dns_ip                    = var.vpc_dns_ip
   openvpn_docker_image          = var.openvpn_docker_image
   openvpn_docker_tag            = var.openvpn_docker_tag

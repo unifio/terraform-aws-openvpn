@@ -11,6 +11,12 @@ variable "stack_item_fullname" {
   description = "Long form descriptive name for this stack item. This value is used to create the 'application' resource tag for resources created by this stack item."
 }
 
+variable "iam_path" {
+  type        = string
+  description = "The path to the IAM resources"
+  default = "/"
+}
+
 ## Instance parameters
 variable "ami_custom" {
   type        = string

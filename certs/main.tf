@@ -7,7 +7,7 @@ provider "template" {
 ## Creates IAM role & policies
 resource "aws_iam_role" "role" {
   name = "${var.stack_item_label}-${var.region}"
-  path = "/"
+  path = var.iam_path
 
   assume_role_policy = <<EOF
 {
